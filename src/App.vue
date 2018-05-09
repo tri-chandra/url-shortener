@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <header>
-      <span>URL Shortener</span>
+      <div class="ui inverted secondary menu">
+        <span class="item">URL Shortener</span>
+        <a class="item">
+          Dashboard
+        </a>
+      </div>
     </header>
     <main>
       <router-view></router-view>
