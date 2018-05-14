@@ -27,11 +27,22 @@ function shorten(rdClient, param) {
 
 function list(rdClient) {
   return new Promise(function(resolve, reject) {
-    rdClient.keys('url:*', (err, reply) => {
+    rdClient.keys('url:*', (err, keys) => {
       if (err) reject(err)
 
-      const result = reply.map(val => hashids.encode(Number(val.substring(4), 10)))
-      resolve(result)
+      let retVal = []
+      rdClient.mget(keys, (err2, urls) => {
+        if (err2) rejsect(err2)
+
+        for (let i=0; i<keys.length; i++) {
+          retVal.push({
+            key: hashids.encode(Number(keys[i].substring(4), 10)),
+            url: urls[i]
+          })
+        }
+
+        resolve(retVal)
+      })
     })
   })
 }

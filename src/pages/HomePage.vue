@@ -1,12 +1,13 @@
 <template>
-<div>
+<div style="text-align: center;">
   <h1>Enter your URL below</h1>
   <input v-model="url"/>
   <button @click="onSubmit">Shorten!</button>
 
-  <div>
-    <button @click="onList">List All</button>
-  </div>
+  <p v-show="shortenedUrl">
+    Your url has been shortened:
+    http://localhost:8180/{{shortenedUrl}}
+  </p>
 </div>
 </template>
 
@@ -16,7 +17,8 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      url: ''
+      url: '',
+      shortenedUrl: ''
     }
   },
   methods: {
@@ -25,19 +27,9 @@ export default {
         '/shorten',
         {
           url: this.url
-        }).then((response) => {
-        console.log(response.data)
-      }).catch((err) => {
-        console.log(err)
-      })
-    },
-    onList() {
-      axios.post(
-        '/list',
-        {
-
-        }).then((response) => {
-        console.log(response.data)
+        }
+      ).then((response) => {
+        this.shortenedUrl = response.data
       }).catch((err) => {
         console.log(err)
       })

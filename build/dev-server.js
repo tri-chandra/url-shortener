@@ -80,7 +80,7 @@ app.use(function(req, res, next) {
     next()
   } else {
     api.lenghten(rdClient, req.originalUrl.substring(1)).then((response) => {
-      res.redirect('http://'+response)
+      res.redirect(response)
     }).catch((err) => {
       res.send(err)
     })

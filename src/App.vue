@@ -2,10 +2,10 @@
   <div id="app">
     <header>
       <div class="ui inverted secondary menu">
-        <span class="item">URL Shortener</span>
-        <a class="item">
-          Dashboard
-        </a>
+        <span class="item">
+          <a href="/">URL Shortener</a>
+        </span>
+        <router-link class="item" :to="{ path: 'dashboard' }">Dashboard</router-link>
       </div>
     </header>
     <main>
@@ -33,8 +33,8 @@ body {
 }
 
 main {
-  text-align: center;
   margin-top: 40px;
+  margin-left: 20px;
 }
 
 header {
