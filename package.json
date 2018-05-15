@@ -5,8 +5,8 @@
   "author": "tri-chandra <tri-chandra@users.noreply.github.com>",
   "private": true,
   "scripts": {
-    "dev": "redis-server | node build/dev-server.js",
-    "start": "redis-server | node build/dev-server.js",
+    "dev": "node build/dev-server.js",
+    "start": "node build/dev-server.js",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit"

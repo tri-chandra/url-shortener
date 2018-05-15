@@ -32,7 +32,7 @@ function list(rdClient) {
 
       let retVal = []
       rdClient.mget(keys, (err2, urls) => {
-        if (err2) rejsect(err2)
+        if (err2) reject(err2)
 
         for (let i=0; i<keys.length; i++) {
           retVal.push({
