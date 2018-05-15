@@ -1,7 +1,9 @@
+const db = require('../firebase')
+
 const Hashids = require('hashids')
 
 const legalAlpha = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ1234567890'
-const hashids = new Hashids('salt', 8, legalAlpha)
+const hashids = new Hashids('salt', 5, legalAlpha)
 
 function shorten(rdClient, param) {
   return new Promise(function(resolve, reject) {
@@ -47,6 +49,24 @@ function list(rdClient) {
   })
 }
 
+function backup(rdClient) {
+  return new Promise(function(resolve, reject) {
+    list(rdClient).then((data) => {
+      const batch = db.batch()
+      for (let i=0; i<data.length; i++) {
+        const datum = data[i]
+        const newDoc = db.collection('url').doc(datum.key)
+        batch.set(newDoc, datum)
+      }
+      batch.commit()
+      resolve('OK')
+    }).catch((err) => {
+      console.log(err)
+      reject(err)
+    })
+  })
+}
+
 
 module.exports = {
   process(rdClient, param) {
@@ -59,6 +79,8 @@ module.exports = {
       return shorten(rdClient, req.body)
     } else if (req.path.startsWith('/list')) {
       return list(rdClient)
+    } else if (req.path.startsWith('/backup')) {
+      return backup(rdClient)
     } else {
       return 'OK'
     }
@@ -69,7 +91,15 @@ module.exports = {
       rdClient.get(`url:${id}`, (err, reply) => {
         if (err) reject(err)
 
-        resolve(reply)
+        if (reply) resolve(reply)
+        else {
+          db.collection('url').doc(path).get().then((doc) => {
+            resolve(doc.data().url)
+          }).catch((err) => {
+            console.log(err)
+            reject(err)
+          })
+        }
       })
     })
   }

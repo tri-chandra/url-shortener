@@ -3,9 +3,12 @@
   <h2>Dashboard</h2>
   <div>
     <button @click="onList">List All</button>
-    <button @click="onList">Backup Memcache</button>
+    <button @click="onBackup">Backup Memcache</button>
   </div>
-  <div class="ui relaxed divided list">
+  <div v-if="noUrl">
+    Memory cache is currently empty
+  </div>
+  <div v-else class="ui relaxed divided list">
     <div
       v-for="item in urlList"
       :key="item.key"
@@ -18,7 +21,7 @@
           class="description"
           :href="`http://localhost:8180/${item.key}`"
           target="_blank">
-          http://localhost:8180/{{item.key}}
+          {{hostname}}/{{item.key}}
         </a>
       </div>
     </div>
@@ -32,7 +35,13 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      urlList: []
+      urlList: [],
+      noUrl: false
+    }
+  },
+  computed: {
+    hostname() {
+      return `${window.location.protocol}//${window.location.host}`
     }
   },
   methods: {
@@ -43,7 +52,23 @@ export default {
 
         }
       ).then((response) => {
-        this.urlList = response.data
+        if ('ERR' === response.data.code) {
+          this.noUrl = true
+        } else {
+          this.urlList = response.data
+        }
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
+    onBackup() {
+      axios.post(
+        '/backup',
+        {
+
+        }
+      ).then((response) => {
+        console.log(response.data)
       }).catch((err) => {
         console.log(err)
       })

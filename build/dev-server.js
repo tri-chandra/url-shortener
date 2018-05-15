@@ -76,7 +76,7 @@ app.use(function(req, res, next) {
     }).catch((err) => {
       res.send(err)
     })
-  } else if (req.originalUrl==='/' || req.originalUrl === '/app.js') {
+  } else if (req.originalUrl==='/' || req.originalUrl === '/app.js' || req.originalUrl.startsWith('/static/')) {
     next()
   } else {
     api.lenghten(rdClient, req.originalUrl.substring(1)).then((response) => {

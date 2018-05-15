@@ -6,7 +6,7 @@
 
   <p v-show="shortenedUrl">
     Your url has been shortened:
-    http://localhost:8180/{{shortenedUrl}}
+    {{hostname}}/{{shortenedUrl}}
   </p>
 </div>
 </template>
@@ -19,6 +19,11 @@ export default {
     return {
       url: '',
       shortenedUrl: ''
+    }
+  },
+  computed: {
+    hostname() {
+      return `${window.location.protocol}//${window.location.host}`
     }
   },
   methods: {
