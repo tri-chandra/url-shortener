@@ -3,7 +3,7 @@ const db = require('../firebase')
 const hashids = require('./hasher')
 const lifetime = 20 //60 * 60 * 24
 
-function shorten(rdClient, param) {
+function shorten(rdClient, hashids, param) {
   return new Promise(function(resolve, reject) {
     rdClient.get('lastkey', (err, reply) => {
       if (err) reject(err)
@@ -14,7 +14,7 @@ function shorten(rdClient, param) {
       }
 
       ++lastIndex
-      rdClient.set(`url:${lastIndex}`, param.url, 'EX', lifetime, (err2, reply) => {
+      rdClient.set(`url:${lastIndex}`, param.url, 'EX', lifetime, (err2, ignored) => {
       // rdClient.set(`url:${lastIndex}`, param.url, (err2, reply) => {
         if (err) reject(err2)
 
@@ -51,6 +51,6 @@ function lenghten(rdClient, path) {
 }
 
 module.exports = {
-  shorten: (rdClient, param) => shorten(rdClient, param),
+  shorten: (rdClient, hashids, param) => shorten(rdClient, hashids, param),
   lenghten: (rdClient, path) => lenghten(rdClient, path)
 }
