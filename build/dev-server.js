@@ -82,6 +82,7 @@ app.use(function(req, res, next) {
     api.lenghten(rdClient, req.originalUrl.substring(1)).then((response) => {
       res.redirect(response)
     }).catch((err) => {
+      //TODO: redirect to 404 page
       res.send(err)
     })
   }
