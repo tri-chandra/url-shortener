@@ -1,7 +1,7 @@
 const db = require('../firebase')
 
 const hashids = require('./hasher')
-const lifetime = 20 //60 * 60 * 24
+const lifetime = 60 * 60 * 24
 
 function shorten(rdClient, hashids, param) {
   return new Promise(function(resolve, reject) {

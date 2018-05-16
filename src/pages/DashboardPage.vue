@@ -19,7 +19,7 @@
         </a>
         <a
           class="description"
-          :href="`http://localhost:8180/${item.key}`"
+          :href="`/${item.key}`"
           target="_blank">
           {{hostname}}/{{item.key}}
         </a>

@@ -11,7 +11,7 @@ module.exports = {
     } else if (req.path.startsWith('/list')) {
       return dataManager.list(rdClient, hashids)
     } else if (req.path.startsWith('/backup')) {
-      return dataManager.backup(rdClient, db)
+      return dataManager.backup(rdClient, db, hashids)
     } else {
       return 'OK'
     }
