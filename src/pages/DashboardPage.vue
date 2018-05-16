@@ -2,8 +2,8 @@
 <div>
   <h2>Dashboard</h2>
   <div>
-    <button @click="onList">List All</button>
-    <button @click="onBackup">Backup Memcache</button>
+    <button :class="listClasses" @click="onList">List All</button>
+    <button :class="backupClasses" @click="onBackup">Backup Memcache</button>
   </div>
   <div v-if="noUrl">
     Memory cache is currently empty
@@ -36,16 +36,33 @@ export default {
   data() {
     return {
       urlList: [],
-      noUrl: false
+      noUrl: false,
+      isLoadingList: false,
+      isBackingup: false
     }
   },
   computed: {
     hostname() {
       return `${window.location.protocol}//${window.location.host}`
+    },
+    listClasses() {
+      if (this.isLoadingList) {
+        return 'ui basic teal loading button'
+      } else {
+        return 'ui basic teal button'
+      }
+    },
+    backupClasses() {
+      if (this.isBackingup) {
+        return 'ui basic green loading button'
+      } else {
+        return 'ui basic green button'
+      }
     }
   },
   methods: {
     onList() {
+      this.isLoadingList = true
       axios.post(
         '/list',
         {
@@ -59,9 +76,12 @@ export default {
         }
       }).catch((err) => {
         console.log(err)
+      }).finally(() => {
+        this.isLoadingList = false
       })
     },
     onBackup() {
+      this.isBackingup = true
       axios.post(
         '/backup',
         {
@@ -71,6 +91,8 @@ export default {
         console.log(response.data)
       }).catch((err) => {
         console.log(err)
+      }).finally(() => {
+        this.isBackingup = false
       })
     }
   }

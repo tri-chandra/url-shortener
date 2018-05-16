@@ -1,8 +1,19 @@
 <template>
 <div style="text-align: center;">
   <h1>Enter your URL below</h1>
-  <input v-model="url"/>
-  <button @click="onSubmit">Shorten!</button>
+  <div class="ui labeled input">
+    <div class="ui simple dropdown label">
+      <div class="text">{{protocol}}</div>
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <div class="item" @click="changeProtocol('https://')">https://</div>
+        <div class="item" @click="changeProtocol('http://')">http://</div>
+        <div class="item" @click="changeProtocol('ftp://')">ftp://</div>
+      </div>
+    </div>
+    <input placeholder="www.example.com" v-model="url"/>
+  </div>
+  <button class="ui button" @click="onSubmit">Shorten!</button>
 
   <p v-show="shortenedUrl">
     Your url has been shortened:
@@ -18,7 +29,8 @@ export default {
   data() {
     return {
       url: '',
-      shortenedUrl: ''
+      shortenedUrl: '',
+      protocol: 'https://'
     }
   },
   computed: {
@@ -27,11 +39,14 @@ export default {
     }
   },
   methods: {
+    changeProtocol(p) {
+      this.protocol = p
+    },
     onSubmit() {
       axios.post(
         '/shorten',
         {
-          url: this.url
+          url: `${this.protocol}${this.url}`
         }
       ).then((response) => {
         this.shortenedUrl = response.data
