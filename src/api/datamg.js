@@ -1,6 +1,12 @@
+/**
+ * Dev only API, list key:calue in mem-cache
+ *
+ * @param {*} rdClient: Inject redis client
+ * @param {*} hashids: Inject hashid instance
+ */
 function list(rdClient, hashids) {
   return new Promise(function(resolve, reject) {
-    rdClient.keys('url:*', (err, keys) => {
+    rdClient.keys('url:*', (err, keys) => { // Query all keys
       if (err) reject(err)
 
       let retVal = []
@@ -22,10 +28,17 @@ function list(rdClient, hashids) {
   })
 }
 
+/**
+ * Push mem-cache content to firebase
+ *
+ * @param {*} rdClient: Inject redis client
+ * @param {*} db: Inject firebase client
+ * @param {*} hashid: Inject hashid instance
+ */
 function backup(rdClient, db, hashid) {
   return new Promise(function(resolve, reject) {
     list(rdClient, hashid).then((data) => {
-      const batch = db.batch()
+      const batch = db.batch() // Setup firebase batch insert
       for (let i=0; i<data.length; i++) {
         const datum = data[i]
         const newDoc = db.collection('url').doc(datum.key)
