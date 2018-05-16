@@ -13,7 +13,7 @@
     </div>
     <input placeholder="www.example.com" v-model="url"/>
   </div>
-  <button class="ui button" @click="onSubmit">Shorten!</button>
+  <button :class="shortenClasses" @click="onSubmit">Shorten!</button>
 
   <p v-show="shortenedUrl">
     Your url has been shortened:
@@ -30,12 +30,20 @@ export default {
     return {
       url: '',
       shortenedUrl: '',
-      protocol: 'https://'
+      protocol: 'https://',
+      isShortening: false
     }
   },
   computed: {
     hostname() {
       return `${window.location.protocol}//${window.location.host}`
+    },
+    shortenClasses() {
+      if (this.isShortening) {
+        return 'ui loading button'
+      } else {
+        return 'ui button'
+      }
     }
   },
   methods: {
@@ -43,6 +51,7 @@ export default {
       this.protocol = p
     },
     onSubmit() {
+      this.isShortening = true
       axios.post(
         '/shorten',
         {
@@ -52,6 +61,8 @@ export default {
         this.shortenedUrl = response.data
       }).catch((err) => {
         console.log(err)
+      }).finally(() => {
+        this.isShortening = false
       })
     }
   }
