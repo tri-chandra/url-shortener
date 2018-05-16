@@ -3,6 +3,7 @@
 // import { config } from '@/config/FirebaseConfig'
 
 const firebase = require('firebase')
+require('firebase/firestore')
 const config = require('../config/FirebaseConfig')
 
 firebase.initializeApp(config)

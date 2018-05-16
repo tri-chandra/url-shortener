@@ -9,9 +9,9 @@ module.exports = {
     if (req.path.startsWith('/shorten')) {
       return urlManager.shorten(rdClient, req.body)
     } else if (req.path.startsWith('/list')) {
-      return dataManager.list(rdClient)
+      return dataManager.list(rdClient, hashids)
     } else if (req.path.startsWith('/backup')) {
-      return dataManager.backup(rdClient)
+      return dataManager.backup(rdClient, db)
     } else {
       return 'OK'
     }
