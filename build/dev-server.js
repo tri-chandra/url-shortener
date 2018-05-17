@@ -2,6 +2,16 @@
 
 require('./check-versions')()
 
+var fs = require('fs')
+var util = require('util')
+var log_file = fs.createWriteStream(__dirname + '/../activity_'+new Date().toISOString().split(':').join('_')+'.log', {flags : 'w'})
+var log_stdout = process.stdout
+
+console.log = function(d) {
+  log_file.write(util.format(d) + '\n');
+  log_stdout.write(util.format(d) + '\n');
+}
+
 const config = require('../config')
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
@@ -116,6 +126,10 @@ devMiddleware.waitUntilValid(() => {
 })
 
 const server = app.listen(port)
+
+process.on('uncaughtException', function(err) {
+  console.log(err)
+})
 
 module.exports = {
   ready: readyPromise,
