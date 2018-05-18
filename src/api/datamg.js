@@ -36,6 +36,7 @@ function list(rdClient, hashids) {
  * @param {*} hashid: Inject hashid instance
  */
 function backup(rdClient, db, hashid) {
+  console.log('Backup executed on: ' + new Date());
   return new Promise(function(resolve, reject) {
     list(rdClient, hashid).then((data) => {
       const batch = db.batch() // Setup firebase batch insert
