@@ -15,9 +15,13 @@
   </div>
   <button :class="shortenClasses" @click="onSubmit">Shorten!</button>
 
-  <p v-show="shortenedUrl">
+  <p style= "margin-top: 20px;" v-show="shortenedUrl">
     Your url has been shortened:
     {{hostname}}/{{shortenedUrl}}
+  </p>
+
+  <p style= "margin-top: 20px;color: red;" v-show="errMsg">
+    {{errMsg}}
   </p>
 </div>
 </template>
@@ -31,7 +35,8 @@ export default {
       url: '',
       shortenedUrl: '',
       protocol: 'https://',
-      isShortening: false
+      isShortening: false,
+      errMsg: ''
     }
   },
   computed: {
@@ -51,19 +56,24 @@ export default {
       this.protocol = p
     },
     onSubmit() {
-      this.isShortening = true
-      axios.post(
-        '/shorten',
-        {
-          url: `${this.protocol}${this.url}`
-        }
-      ).then((response) => {
-        this.shortenedUrl = response.data
-      }).catch((err) => {
-        console.log(err)
-      }).finally(() => {
-        this.isShortening = false
-      })
+      if (this.url.trim().length > 0) {
+        this.errMsg = ''
+        this.isShortening = true
+        axios.post(
+          '/shorten',
+          {
+            url: `${this.protocol}${this.url}`
+          }
+        ).then((response) => {
+          this.shortenedUrl = response.data
+        }).catch((err) => {
+          console.log(err)
+        }).finally(() => {
+          this.isShortening = false
+        })
+      } else {
+        this.errMsg = "Please provide a URL!"
+      }
     }
   }
 }
